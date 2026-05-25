@@ -1,0 +1,6 @@
+{
+  "name": "Red de Recursos de Acompañamiento - La Plata",
+  "description": "Mapa interactivo y sistema de red para la articulación de recursos, talleres, centros de salud y espacios de contención comunitaria en La Plata.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
