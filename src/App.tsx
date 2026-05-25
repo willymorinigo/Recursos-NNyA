@@ -259,6 +259,12 @@ export default function App() {
     }
   };
 
+  const handleUpdateCoordinates = async (resource: Resource, lat: number, lng: number) => {
+    if (!isAdmin) return;
+    const updatedDetails = { ...resource, lat, lng };
+    await handleSaveCustomResource(updatedDetails);
+  };
+
   const handleDeleteResource = async (id: string) => {
     if (!isAdmin) return;
     // Optimistic Update
@@ -439,7 +445,7 @@ export default function App() {
             onMapClickToAdd={handleMapClickToAdd}
             tempMarkerCoords={tempMarkerCoords}
             isAdmin={isAdmin}
-            onUpdateCoordinates={handleSaveCustomResource}
+            onUpdateCoordinates={handleUpdateCoordinates}
           />
 
           {/* Collapsible Details Panel layer sliding from right edge */}

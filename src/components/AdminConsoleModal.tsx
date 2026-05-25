@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Resource, ResourceCategory } from '../types';
 import { 
   Search, Plus, Trash2, Edit3, X, ChevronLeft, ChevronRight, 
-  ShieldAlert, UploadCloud, CheckCircle2, AlertTriangle, FileText, Database, Copy
+  ShieldAlert, UploadCloud, CheckCircle2, AlertTriangle, FileText, Database, Copy, MapPin, Sparkles
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { CATEGORY_COLORS } from './ResourceMap';
@@ -81,6 +81,16 @@ function normalizeName(text: string): string {
     .replace(/[^a-z0-9]/g, '');
 }
 
+export const isFallbackCoordinate = (lat: number, lng: number): boolean => {
+  for (const key of Object.keys(LOCALITY_CENTERS)) {
+    const center = LOCALITY_CENTERS[key];
+    if (Math.abs(lat - center.lat) < 0.0001 && Math.abs(lng - center.lng) < 0.0001) {
+      return true;
+    }
+  }
+  return false;
+};
+
 export default function AdminConsoleModal({
   resources,
   onClose,
@@ -89,11 +99,203 @@ export default function AdminConsoleModal({
   onAddNew,
   onBulkImport
 }: AdminConsoleModalProps) {
-  const [activeTab, setActiveTab] = useState<'list' | 'bulk'>('list');
+  const [activeTab, setActiveTab] = useState<'list' | 'bulk' | 'geocoding'>('list');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<ResourceCategory | 'all'>('all');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
+
+  // Local Resources copy for batch geocoding edits
+  const [localResources, setLocalResources] = useState<Resource[]>(resources);
+  React.useEffect(() => {
+    setLocalResources(resources);
+  }, [resources]);
+
+  // Bulk Geocoding batch list and progression states
+  const [selectedGeocodingIds, setSelectedGeocodingIds] = useState<Set<string>>(new Set());
+  const [geocodingSearchQuery, setGeocodingSearchQuery] = useState('');
+  const [geocodingCategory, setGeocodingCategory] = useState<ResourceCategory | 'all' | 'imprecise'>('all');
+  const [isBatchRunning, setIsBatchRunning] = useState(false);
+  const [geocodingProgress, setGeocodingProgress] = useState<{ current: number; total: number; successes: number; failures: number }>({ current: 0, total: 0, successes: 0, failures: 0 });
+  const [geocodingStatusMap, setGeocodingStatusMap] = useState<Record<string, 'pending' | 'success' | 'failed' | 'processing'>>({});
+  const [modifiedIds, setModifiedIds] = useState<Set<string>>(new Set());
+  const [isBulkGeocodingSaving, setIsBulkGeocodingSaving] = useState(false);
+
+  // Stop/Pause controller ref to break concurrent run loops comfortably
+  const abortControllerRef = useRef<boolean>(false);
+
+  // Single geocoder task runner
+  const geocodeAddress = async (addressText: string): Promise<{ lat: number; lng: number } | null> => {
+    try {
+      let query = addressText;
+      if (!query.toLowerCase().includes('la plata')) {
+        query += ', La Plata, Buenos Aires, Argentina';
+      } else if (!query.toLowerCase().includes('argentina')) {
+        query += ', Argentina';
+      }
+
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`;
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'YouthResourcesApp/1.0.0 (willymorinigo@gmail.com)'
+        }
+      });
+      if (response.ok) {
+        const results = await response.json();
+        if (results && results.length > 0) {
+          return { lat: parseFloat(results[0].lat), lng: parseFloat(results[0].lon) };
+        }
+      }
+      
+      // Fallback query matching: simplify address intersections (such as intersections or corners)
+      let simplifiedQuery = addressText;
+      simplifiedQuery = simplifiedQuery
+        .replace(/e\/\s*\d+\s*y\s*\d+/i, '')
+        .replace(/esq\.?\s*\d+/i, '')
+        .replace(/\s+y\s+\d+/i, '');
+      
+      if (!simplifiedQuery.toLowerCase().includes('la plata')) {
+        simplifiedQuery += ', La Plata, Buenos Aires, Argentina';
+      }
+
+      const fallbackUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(simplifiedQuery)}&limit=1`;
+      const fallbackRes = await fetch(fallbackUrl, {
+        headers: {
+          'User-Agent': 'YouthResourcesApp/1.0.0 (willymorinigo@gmail.com)'
+        }
+      });
+      if (fallbackRes.ok) {
+        const fallbackResults = await fallbackRes.json();
+        if (fallbackResults && fallbackResults.length > 0) {
+          return { lat: parseFloat(fallbackResults[0].lat), lng: parseFloat(fallbackResults[0].lon) };
+        }
+      }
+    } catch (e) {
+      console.error("Geocoding error for address:", addressText, e);
+    }
+    return null;
+  };
+
+  const handleSingleGeocodeInTab = async (resource: Resource) => {
+    if (isBatchRunning) return;
+    setGeocodingStatusMap(prev => ({ ...prev, [resource.id as string]: 'processing' }));
+    
+    const result = await geocodeAddress(resource.address);
+    if (result) {
+      setLocalResources(prev => prev.map(item => item.id === resource.id ? { ...item, lat: result.lat, lng: result.lng } : item));
+      setGeocodingStatusMap(prev => ({ ...prev, [resource.id as string]: 'success' }));
+      setModifiedIds(prev => {
+        const next = new Set(prev);
+        next.add(resource.id);
+        return next;
+      });
+    } else {
+      setGeocodingStatusMap(prev => ({ ...prev, [resource.id as string]: 'failed' }));
+    }
+  };
+
+  const handleStartBatchGeocoding = async () => {
+    if (isBatchRunning) {
+      // Toggle Pause trigger
+      abortControllerRef.current = true;
+      setIsBatchRunning(false);
+      return;
+    }
+
+    const idsToProcess = Array.from(selectedGeocodingIds).filter(id => {
+      const status = geocodingStatusMap[id as string];
+      return status !== 'success';
+    });
+
+    if (idsToProcess.length === 0) {
+      alert("No hay recursos seleccionados que requieran georreferenciación o ya fueron completados con éxito.");
+      return;
+    }
+
+    setIsBatchRunning(true);
+    abortControllerRef.current = false;
+    
+    let successes = 0;
+    let failures = 0;
+    let processedCount = 0;
+
+    setGeocodingProgress({
+      current: 0,
+      total: idsToProcess.length,
+      successes: 0,
+      failures: 0
+    });
+
+    for (const id of idsToProcess) {
+      if (abortControllerRef.current) {
+        break;
+      }
+
+      const resource = localResources.find(item => item.id === id);
+      if (!resource) continue;
+
+      setGeocodingStatusMap(prev => ({ ...prev, [id as string]: 'processing' }));
+      
+      // Delay to respect OSM free geocoding limits (400ms is standard for visually active batches)
+      await new Promise(resolve => setTimeout(resolve, 400));
+
+      const result = await geocodeAddress(resource.address);
+      processedCount++;
+
+      if (result) {
+        successes++;
+        setLocalResources(prev => prev.map(item => item.id === id ? { ...item, lat: result.lat, lng: result.lng } : item));
+        setGeocodingStatusMap(prev => ({ ...prev, [id as string]: 'success' }));
+        setModifiedIds(prev => {
+          const next = new Set(prev);
+          next.add(id);
+          return next;
+        });
+      } else {
+        failures++;
+        setGeocodingStatusMap(prev => ({ ...prev, [id as string]: 'failed' }));
+      }
+
+      setGeocodingProgress({
+        current: processedCount,
+        total: idsToProcess.length,
+        successes,
+        failures
+      });
+    }
+
+    setIsBatchRunning(false);
+  };
+
+  const handleSaveGeocodedCoordinates = async () => {
+    if (modifiedIds.size === 0) return;
+    setIsBulkGeocodingSaving(true);
+    setErrorMessage('');
+    try {
+      const response = await fetch('/api/resources/bulk', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Auth': 'admin'
+        },
+        body: JSON.stringify(localResources)
+      });
+      if (response.ok) {
+        const savedList = await response.json();
+        onBulkImport(savedList);
+        setLocalResources(savedList);
+        setModifiedIds(new Set());
+        alert(`¡Coordenadas guardadas con éxito! Se actualizaron ${modifiedIds.size} recursos en el servidor.`);
+      } else {
+        const text = await response.text();
+        setErrorMessage(`Error del servidor al guardar coordenadas: ${text || response.statusText}`);
+      }
+    } catch (err: any) {
+      setErrorMessage(`Fallo de conexión al guardar: ${err.message || err}`);
+    } finally {
+      setIsBulkGeocodingSaving(false);
+    }
+  };
 
   // Bulk Upload States
   const [csvText, setCsvText] = useState('');
@@ -110,6 +312,28 @@ export default function AdminConsoleModal({
   const [errorMessage, setErrorMessage] = useState('');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Filter helper for the Geocoding Tab
+  const getGeocodingFilteredResources = () => {
+    return localResources.filter((res) => {
+      // 1. Text Search query
+      if (geocodingSearchQuery.trim()) {
+        const q = geocodingSearchQuery.toLowerCase();
+        const matchesName = res.name.toLowerCase().includes(q);
+        const matchesAddress = res.address.toLowerCase().includes(q);
+        if (!matchesName && !matchesAddress) return false;
+      }
+
+      // 2. Category selection or generic fallback selection
+      if (geocodingCategory === 'imprecise') {
+        if (!isFallbackCoordinate(res.lat, res.lng)) return false;
+      } else if (geocodingCategory !== 'all') {
+        if (res.category !== geocodingCategory) return false;
+      }
+
+      return true;
+    });
+  };
 
   // --- Filter Resources (For Directorio Tab) ---
   const filtered = resources.filter((res) => {
@@ -536,6 +760,17 @@ export default function AdminConsoleModal({
             >
               <UploadCloud className="w-3.5 h-3.5" />
               <span>Carga Masiva (CSV)</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('geocoding')}
+              className={`px-4 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 select-none ${
+                activeTab === 'geocoding' 
+                  ? 'bg-white text-slate-800 shadow-xs' 
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <MapPin className="w-3.5 h-3.5" />
+              <span>Auto-Georreferenciar</span>
             </button>
           </div>
 
@@ -1000,6 +1235,338 @@ export default function AdminConsoleModal({
               </div>
             )}
 
+          </div>
+        )}
+
+        {/* ==================================== */}
+        {/* TAB 3: SMART AUTO-GEOREFERENCER       */}
+        {/* ==================================== */}
+        {activeTab === 'geocoding' && (
+          <div className="flex-1 min-h-0 flex flex-col overflow-hidden animate-fade-in font-sans">
+            {/* Top Analysis Card / Stats Header */}
+            <div className="px-6 py-4 border-b border-indigo-50 bg-indigo-50/20 grid grid-cols-1 md:grid-cols-3 gap-4 shrink-0">
+              <div className="bg-white p-3.5 rounded-2xl border border-indigo-50 shadow-xs">
+                <p className="text-[10px] uppercase font-black tracking-wider text-slate-400">Pines Totales</p>
+                <div className="flex items-baseline gap-1.5 mt-1">
+                  <span className="text-xl font-black text-slate-800">{localResources.length}</span>
+                  <span className="text-[10px] text-slate-500 font-bold">en base de datos</span>
+                </div>
+              </div>
+
+              <div className="bg-white p-3.5 rounded-2xl border border-indigo-50 shadow-xs relative overflow-hidden">
+                <p className="text-[10px] uppercase font-black tracking-wider text-amber-500 flex items-center gap-1">
+                  <span>⚠️ Ubicaciones Genéricas (Fallback)</span>
+                </p>
+                <div className="flex items-baseline gap-1.5 mt-1">
+                  <span className="text-xl font-black text-amber-600">
+                    {localResources.filter(r => isFallbackCoordinate(r.lat, r.lng)).length}
+                  </span>
+                  <span className="text-[10px] text-slate-500 font-bold">con dirección pendiente de ubicar</span>
+                </div>
+              </div>
+
+              <div className="bg-white p-3.5 rounded-2xl border border-indigo-100 shadow-xs flex flex-col justify-between">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <span className="text-[10px] uppercase font-black tracking-wider text-emerald-600">Pines Modificados</span>
+                    <p className="text-base font-black text-emerald-700 mt-0.5">{modifiedIds.size} corregidos</p>
+                  </div>
+                  {modifiedIds.size > 0 && (
+                    <span className="flex h-2.5 w-2.5 relative">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                    </span>
+                  )}
+                </div>
+                {modifiedIds.size > 0 ? (
+                  <button
+                    onClick={handleSaveGeocodedCoordinates}
+                    disabled={isBulkGeocodingSaving}
+                    className="w-full mt-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[10px] py-1.5 rounded-xl transition uppercase cursor-pointer text-center animate-pulse duration-1000 select-none flex items-center justify-center gap-1"
+                  >
+                    {isBulkGeocodingSaving ? 'Procesando guardado...' : '💾 Guardar Coordenadas Nuevas'}
+                  </button>
+                ) : (
+                  <p className="text-[9px] text-slate-400 font-bold italic mt-2">No hay posiciones pendientes de guardar.</p>
+                )}
+              </div>
+            </div>
+
+            {/* Sub-Filters and Quick Select Block */}
+            <div className="px-6 py-3 border-b border-slate-50 bg-slate-50/40 flex flex-col sm:flex-row gap-3 items-center justify-between shrink-0">
+              <div className="flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center w-full sm:w-auto">
+                <div className="relative">
+                  <Search className="absolute left-3 top-2.5 w-3.5 h-3.5 text-slate-400" />
+                  <input
+                    type="text"
+                    className="w-full sm:w-64 text-xs pl-8.5 pr-4 py-2 bg-white border border-slate-150 focus:outline-none focus:ring-2 focus:ring-indigo-600 rounded-xl transition"
+                    placeholder="Filtrar por nombre o dirección..."
+                    value={geocodingSearchQuery}
+                    onChange={(e) => setGeocodingSearchQuery(e.target.value)}
+                  />
+                </div>
+
+                <select
+                  value={geocodingCategory}
+                  onChange={(e) => setGeocodingCategory(e.target.value as any)}
+                  className="text-xs py-2 px-3 bg-white border border-slate-150 focus:outline-none focus:ring-2 focus:ring-indigo-600 rounded-xl cursor-pointer font-bold text-slate-700"
+                >
+                  <option value="all">Todas las Categorías</option>
+                  <option value="imprecise">⚠️ Sólo Localizaciones Genéricas (Cabeceras)</option>
+                  <option value="educacion">🎓 Educación</option>
+                  <option value="salud">🩺 Salud</option>
+                  <option value="contencion">🛡️ Contención</option>
+                  <option value="comunidad">🤝 Comunidad</option>
+                  <option value="recreacion">⚽ Club/Recreación</option>
+                  <option value="legal">⚖️ Derechos/Legal</option>
+                  <option value="personal">⭐ Mis Pines/Otros</option>
+                </select>
+              </div>
+
+              {/* Quick checks managers */}
+              <div className="flex items-center gap-1.5 self-stretch sm:self-auto justify-end">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const shownIds = getGeocodingFilteredResources().map(r => r.id);
+                    setSelectedGeocodingIds(new Set(shownIds));
+                  }}
+                  className="px-2.5 py-1.5 border border-slate-200 text-slate-600 hover:text-slate-900 bg-white font-bold text-[10px] rounded-lg transition hover:bg-slate-50 cursor-pointer select-none active:scale-97"
+                >
+                  Seleccionar mostrados
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const shownImpreciseIds = getGeocodingFilteredResources()
+                      .filter(r => isFallbackCoordinate(r.lat, r.lng))
+                      .map(r => r.id);
+                    setSelectedGeocodingIds(new Set(shownImpreciseIds));
+                  }}
+                  className="px-2.5 py-1.5 border border-amber-200 text-amber-800 hover:text-amber-950 bg-amber-50 font-bold text-[10px] rounded-lg transition hover:bg-amber-100 cursor-pointer select-none active:scale-97"
+                >
+                  Seleccionar genéricos
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedGeocodingIds(new Set())}
+                  className="px-2.5 py-1.5 border border-slate-200 text-slate-600 hover:text-slate-900 bg-white font-bold text-[10px] rounded-lg transition hover:bg-slate-50 cursor-pointer select-none active:scale-97"
+                >
+                  Deseleccionar todos
+                </button>
+              </div>
+            </div>
+
+            {/* Process Execution Banner (Progress) */}
+            {selectedGeocodingIds.size > 0 && (
+              <div className="px-6 py-3.5 border-b border-slate-100 bg-slate-50 flex flex-col md:flex-row gap-4 items-center justify-between shrink-0">
+                <div className="flex items-center gap-3 w-full md:w-auto">
+                  <button
+                    type="button"
+                    onClick={handleStartBatchGeocoding}
+                    className={`flex items-center justify-center gap-2 font-black text-xs px-5 py-2.5 rounded-xl transition cursor-pointer select-none border shrink-0 ${
+                      isBatchRunning
+                        ? 'bg-amber-100 hover:bg-amber-200 text-amber-900 border-amber-300'
+                        : 'bg-indigo-600 hover:bg-indigo-700 text-white border-indigo-700 shadow-md'
+                    }`}
+                  >
+                    {isBatchRunning ? (
+                      <>
+                        <span className="w-3.5 h-3.5 border-2 border-amber-900 border-t-transparent rounded-full animate-spin"></span>
+                        <span>PAUSAR EJECUCIÓN</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4" />
+                        <span>UBICAR AUTOMÁTICAMENTE ({selectedGeocodingIds.size} seleccionados)</span>
+                      </>
+                    )}
+                  </button>
+
+                  <div className="text-xs font-bold text-slate-500 hidden sm:block">
+                    {isBatchRunning ? 'Localizando con Nominatim (espera activa para no sobrecargar el servidor)...' : 'Presiona el botón para procesar la cola seleccionada automáticamente.'}
+                  </div>
+                </div>
+
+                {/* Progress bar container */}
+                {(isBatchRunning || geocodingProgress.current > 0) && (
+                  <div className="w-full md:w-80 flex flex-col gap-1.5 shrink-0">
+                    <div className="flex justify-between text-[11px] font-black font-mono">
+                      <span className="text-slate-600">PROGRESO CONTINUO</span>
+                      <span className="text-indigo-600">
+                        {geocodingProgress.current} / {geocodingProgress.total} ({Math.round((geocodingProgress.current / (geocodingProgress.total || 1)) * 100)}%)
+                      </span>
+                    </div>
+                    <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden flex">
+                      <div 
+                        className="bg-emerald-500 transition-all duration-200"
+                        style={{ width: `${(geocodingProgress.successes / (geocodingProgress.total || 1)) * 100}%` }}
+                        title={`Correctos: ${geocodingProgress.successes}`}
+                      ></div>
+                      <div 
+                        className="bg-rose-500 transition-all duration-200"
+                        style={{ width: `${(geocodingProgress.failures / (geocodingProgress.total || 1)) * 100}%` }}
+                        title={`Sin coordenadas exactas: ${geocodingProgress.failures}`}
+                      ></div>
+                    </div>
+                    <div className="flex gap-3 text-[10px] font-bold">
+                      <span className="text-emerald-700">✔️ Ubicados: {geocodingProgress.successes}</span>
+                      <span className="text-rose-750">❌ No ubicados: {geocodingProgress.failures}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Error Message banner if any */}
+            {errorMessage && (
+              <div className="mx-6 mt-3 px-4 py-2.5 rounded-xl bg-rose-50 border border-rose-150 text-rose-800 text-xs font-bold flex items-center gap-2 shrink-0">
+                <AlertTriangle className="w-4 h-4 shrink-0 text-rose-600" />
+                <span>{errorMessage}</span>
+              </div>
+            )}
+
+            {/* Resources list table */}
+            <div className="flex-1 overflow-auto px-6 py-4">
+              <div className="border border-slate-100 rounded-2xl overflow-hidden bg-white shadow-xs max-h-full flex flex-col">
+                <div className="overflow-auto flex-1">
+                  <table className="w-full text-left border-collapse table-fixed">
+                    <thead className="bg-slate-50 sticky top-0 font-bold text-[10px] uppercase text-slate-400 z-15 border-b border-slate-100">
+                      <tr>
+                        <th className="py-2.5 px-4 w-12 text-center bg-slate-50">
+                          <input
+                            type="checkbox"
+                            checked={getGeocodingFilteredResources().length > 0 && getGeocodingFilteredResources().every(r => selectedGeocodingIds.has(r.id))}
+                            onChange={(e) => {
+                              const shown = getGeocodingFilteredResources();
+                              if (e.target.checked) {
+                                setSelectedGeocodingIds(prev => {
+                                  const next = new Set(prev);
+                                  shown.forEach(r => next.add(r.id));
+                                  return next;
+                                });
+                              } else {
+                                setSelectedGeocodingIds(prev => {
+                                  const next = new Set(prev);
+                                  shown.forEach(r => next.delete(r.id));
+                                  return next;
+                                });
+                              }
+                            }}
+                            className="rounded text-indigo-600 focus:ring-indigo-500 w-3.5 h-3.5 cursor-pointer"
+                          />
+                        </th>
+                        <th className="py-2.5 px-3 w-1/4 bg-slate-50">Nombre / Especialidad</th>
+                        <th className="py-2.5 px-3 w-1/3 hidden md:table-cell bg-slate-50">Dirección Física</th>
+                        <th className="py-2.5 px-3 w-32 bg-slate-50">Coordenadas</th>
+                        <th className="py-2.5 px-3 w-28 text-center bg-slate-50">Ubicación</th>
+                        <th className="py-2.5 px-3 w-40 text-right bg-slate-50">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-50 font-medium text-slate-700 text-xs">
+                      {getGeocodingFilteredResources().length === 0 ? (
+                        <tr>
+                          <td colSpan={6} className="py-12 text-center text-slate-400 font-bold">
+                            Ningún recurso coincide con los filtros de visualización o búsqueda.
+                          </td>
+                        </tr>
+                      ) : (
+                        getGeocodingFilteredResources().map((resource) => {
+                          const isSelected = selectedGeocodingIds.has(resource.id);
+                          const isImprecise = isFallbackCoordinate(resource.lat, resource.lng);
+                          const isModified = modifiedIds.has(resource.id);
+                          const status = geocodingStatusMap[resource.id] || 'pending';
+                          const categoryConfig = CATEGORY_COLORS[resource.category] || CATEGORY_COLORS.personal;
+
+                          return (
+                            <tr 
+                              key={resource.id} 
+                              className={`hover:bg-slate-50/50 transition-colors ${
+                                status === 'processing' ? 'bg-indigo-50/25' : 
+                                status === 'success' ? 'bg-emerald-50/20' : 
+                                status === 'failed' ? 'bg-rose-50/20' : ''
+                              }`}
+                            >
+                              <td className="py-2.5 px-4 text-center">
+                                <input
+                                  type="checkbox"
+                                  checked={isSelected}
+                                  onChange={(e) => {
+                                    setSelectedGeocodingIds(prev => {
+                                      const next = new Set(prev);
+                                      if (e.target.checked) {
+                                        next.add(resource.id);
+                                      } else {
+                                        next.delete(resource.id);
+                                      }
+                                      return next;
+                                    });
+                                  }}
+                                  className="rounded text-indigo-600 focus:ring-indigo-500 w-3.5 h-3.5 cursor-pointer"
+                                />
+                              </td>
+                              <td className="py-2.5 px-3">
+                                <div className="font-extrabold text-slate-800 truncate" title={resource.name}>{resource.name}</div>
+                                <div className="flex items-center gap-1.5 mt-0.5 text-[10px] text-slate-400 font-bold uppercase truncate">
+                                  <span>{categoryConfig.icon}</span>
+                                  <span>{resource.subcategory}</span>
+                                </div>
+                              </td>
+                              <td className="py-2.5 px-3 hidden md:table-cell text-slate-500 truncate" title={resource.address}>
+                                {resource.address}
+                              </td>
+                              <td className="py-2.5 px-3 font-mono text-[10px] text-slate-500 font-bold">
+                                <span className={isModified ? "text-emerald-600 font-extrabold" : ""}>
+                                  {resource.lat.toFixed(5)}, {resource.lng.toFixed(5)}
+                                </span>
+                              </td>
+                              <td className="py-2.5 px-3 text-center">
+                                {isImprecise ? (
+                                  <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-amber-50 text-amber-700 border border-amber-100 flex items-center justify-center gap-1 mx-auto max-w-[90px]">
+                                    Genérica
+                                  </span>
+                                ) : (
+                                  <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center gap-1 mx-auto max-w-[90px]">
+                                    Precisa
+                                  </span>
+                                )}
+                              </td>
+                              <td className="py-2.5 px-3 text-right">
+                                <div className="flex justify-end items-center gap-2">
+                                  {status === 'processing' ? (
+                                    <span className="text-[10px] font-extrabold text-indigo-600 flex items-center gap-1">
+                                      <span className="w-2.5 h-2.5 border border-indigo-650 border-t-transparent rounded-full animate-spin"></span>
+                                      <span className="hidden sm:inline">Buscando...</span>
+                                    </span>
+                                  ) : status === 'success' ? (
+                                    <span className="text-[10px] font-extrabold text-emerald-600 flex items-center gap-0.5">
+                                      <span>✔️</span> <span className="hidden sm:inline">Éxito</span>
+                                    </span>
+                                  ) : status === 'failed' ? (
+                                    <span className="text-[10px] font-extrabold text-rose-600 flex items-center gap-0.5" title="No se especificaron resultados precisos">
+                                      <span>❌</span> <span className="hidden sm:inline">Fila fallida</span>
+                                    </span>
+                                  ) : null}
+
+                                  <button
+                                    type="button"
+                                    disabled={isBatchRunning || status === 'processing'}
+                                    onClick={() => handleSingleGeocodeInTab(resource)}
+                                    className="px-2 py-1 rounded-lg bg-slate-50 hover:bg-indigo-50 hover:text-indigo-750 hover:border-indigo-150 text-slate-700 font-extrabold text-[10px] border border-slate-150 transition disabled:opacity-50 cursor-pointer select-none active:scale-97 shrink-0"
+                                  >
+                                    Ubicación
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </motion.div>

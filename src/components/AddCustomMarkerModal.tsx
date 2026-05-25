@@ -34,6 +34,99 @@ export default function AddCustomMarkerModal({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // Geocoding States for Single Resource Search
+  const [isGeocoding, setIsGeocoding] = useState(false);
+  const [geocodeStatus, setGeocodeStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  const handleGeocodeSingle = async () => {
+    if (!address.trim()) {
+      setErrors(prev => ({ ...prev, address: 'Ingresa una dirección primero para buscar sus coordenadas.' }));
+      return;
+    }
+    setIsGeocoding(true);
+    setGeocodeStatus(null);
+    try {
+      let query = address;
+      if (!query.toLowerCase().includes('la plata')) {
+        query += ', La Plata, Buenos Aires, Argentina';
+      } else if (!query.toLowerCase().includes('argentina')) {
+        query += ', Argentina';
+      }
+
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`;
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': `YouthResourcesApp/1.0.0 (willymorinigo@gmail.com)`
+        }
+      });
+      if (response.ok) {
+        const results = await response.json();
+        if (results && results.length > 0) {
+          const first = results[0];
+          const newLat = parseFloat(first.lat);
+          const newLng = parseFloat(first.lon);
+          setLat(newLat);
+          setLng(newLng);
+          setGeocodeStatus({ 
+            type: 'success', 
+            message: `¡Ubicación sugerida con éxito! Coordenadas asignadas automáticamente: ${newLat.toFixed(5)}, ${newLng.toFixed(5)}` 
+          });
+        } else {
+          // Fallback parsing: simplify address intersections
+          let simplifiedQuery = address;
+          simplifiedQuery = simplifiedQuery
+            .replace(/e\/\s*\d+\s*y\s*\d+/i, '')
+            .replace(/esq\.?\s*\d+/i, '')
+            .replace(/\s+y\s+\d+/i, '');
+          
+          if (!simplifiedQuery.toLowerCase().includes('la plata')) {
+            simplifiedQuery += ', La Plata, Buenos Aires, Argentina';
+          }
+
+          const fallbackUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(simplifiedQuery)}&limit=1`;
+          const fallbackRes = await fetch(fallbackUrl, {
+            headers: {
+              'User-Agent': `YouthResourcesApp/1.0.0 (willymorinigo@gmail.com)`
+            }
+          });
+
+          if (fallbackRes.ok) {
+            const fallbackResults = await fallbackRes.json();
+            if (fallbackResults && fallbackResults.length > 0) {
+              const first = fallbackResults[0];
+              const newLat = parseFloat(first.lat);
+              const newLng = parseFloat(first.lon);
+              setLat(newLat);
+              setLng(newLng);
+              setGeocodeStatus({ 
+                type: 'success', 
+                message: `Ubicado con éxito (búsqueda simplificada: "${simplifiedQuery.split(',')[0]}"): ${newLat.toFixed(5)}, ${newLng.toFixed(5)}` 
+              });
+              return;
+            }
+          }
+
+          setGeocodeStatus({ 
+            type: 'error', 
+            message: 'No se encontraron coordenadas precisas. Intente escribir sólo la calle y número (ej: Calle 6 y 50), o use dirección simple.' 
+          });
+        }
+      } else {
+        setGeocodeStatus({ 
+          type: 'error', 
+          message: 'Error de respuesta del servidor de geocodificación (Nominatim).' 
+        });
+      }
+    } catch (err: any) {
+      setGeocodeStatus({ 
+        type: 'error', 
+        message: `Fallo de conexión: ${err.message || 'Servidor inalcanzable'}` 
+      });
+    } finally {
+      setIsGeocoding(false);
+    }
+  };
+
   if (!coords && !resourceToEdit) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -177,20 +270,45 @@ export default function AddCustomMarkerModal({
           {/* Physical Address */}
           <div>
             <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Dirección Física *</label>
-            <div className="relative">
-              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <input
-                type="text"
-                className="w-full text-xs pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-600 rounded-xl transition"
-                placeholder="Ej: Calle 65 N° 456 e/ 12 y 13"
-                value={address}
-                onChange={(e) => {
-                  setAddress(e.target.value);
-                  if (errors.address) setErrors({ ...errors, address: '' });
-                }}
-              />
+            <div className="flex flex-col sm:flex-row gap-2">
+              <div className="relative flex-1">
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="text"
+                  className="w-full text-xs pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-600 rounded-xl transition font-medium"
+                  placeholder="Ej: Calle 65 N° 456 e/ 12 y 13"
+                  value={address}
+                  onChange={(e) => {
+                    setAddress(e.target.value);
+                    if (errors.address) setErrors({ ...errors, address: '' });
+                  }}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={handleGeocodeSingle}
+                disabled={isGeocoding || !address.trim()}
+                className="flex items-center justify-center gap-1.5 bg-indigo-50 hover:bg-indigo-100 disabled:opacity-50 text-indigo-700 text-xs font-extrabold px-4 py-2.5 rounded-xl transition border border-indigo-150 cursor-pointer select-none active:scale-97 shrink-0"
+                title="Sugerir ubicación por coordenadas a partir de la dirección escrita"
+              >
+                {isGeocoding ? (
+                  <span className="w-3.5 h-3.5 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></span>
+                ) : (
+                  <Sparkles className="w-3.5 h-3.5" />
+                )}
+                <span>Buscar Ubicación</span>
+              </button>
             </div>
             {errors.address && <p className="text-[10px] text-red-500 font-bold mt-1">{errors.address}</p>}
+            {geocodeStatus && (
+              <div className={`text-[10px] font-bold mt-1.5 px-3 py-2 rounded-xl border ${
+                geocodeStatus.type === 'success' 
+                  ? 'bg-emerald-50 border-emerald-200 text-emerald-800' 
+                  : 'bg-rose-50 border-rose-200 text-rose-800'
+              }`}>
+                {geocodeStatus.message}
+              </div>
+            )}
           </div>
 
           {/* Description */}
