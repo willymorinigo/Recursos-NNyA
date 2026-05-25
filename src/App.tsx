@@ -438,6 +438,8 @@ export default function App() {
             isAddingCustom={isAddingCustom}
             onMapClickToAdd={handleMapClickToAdd}
             tempMarkerCoords={tempMarkerCoords}
+            isAdmin={isAdmin}
+            onUpdateCoordinates={handleSaveCustomResource}
           />
 
           {/* Collapsible Details Panel layer sliding from right edge */}
@@ -474,6 +476,7 @@ export default function App() {
             coords={tempMarkerCoords}
             onClose={() => setTempMarkerCoords(null)}
             onSave={handleSaveCustomResource}
+            isAdmin={isAdmin}
           />
         )}
         {editingResource && (
@@ -482,6 +485,7 @@ export default function App() {
             resourceToEdit={editingResource}
             onClose={() => setEditingResource(null)}
             onSave={handleSaveCustomResource}
+            isAdmin={isAdmin}
           />
         )}
       </AnimatePresence>

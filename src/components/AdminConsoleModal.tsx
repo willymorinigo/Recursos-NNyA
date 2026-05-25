@@ -452,8 +452,15 @@ export default function AdminConsoleModal({
         setCsvText('');
         setParsedStats(null);
       } else {
-        const errJson = await response.json();
-        setErrorMessage(errJson.error || 'Error de procesamiento en la consola de servidor.');
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const errJson = await response.json();
+          setErrorMessage(errJson.error || `Error de procesamiento en la consola del servidor (Código ${response.status}).`);
+        } else {
+          const text = await response.text();
+          const shortText = text.length > 150 ? text.substring(0, 150).trim() + "..." : text.trim();
+          setErrorMessage(`Error del servidor (Código ${response.status}): ${shortText || 'Respuesta vacía o no válida.'}`);
+        }
       }
     } catch (err: any) {
       setErrorMessage(`Fallo de conexión con el backend: ${err.message || 'Servidor inalcanzable'}`);

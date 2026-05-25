@@ -9,13 +9,15 @@ interface AddCustomMarkerModalProps {
   onClose: () => void;
   onSave: (resource: Omit<Resource, 'id'> & { id?: string }) => void;
   resourceToEdit?: Resource | null;
+  isAdmin?: boolean;
 }
 
 export default function AddCustomMarkerModal({
   coords,
   onClose,
   onSave,
-  resourceToEdit = null
+  resourceToEdit = null,
+  isAdmin = false
 }: AddCustomMarkerModalProps) {
   const [name, setName] = useState(resourceToEdit ? resourceToEdit.name : '');
   const [subcategory, setSubcategory] = useState(resourceToEdit ? resourceToEdit.subcategory : '');
@@ -27,6 +29,8 @@ export default function AddCustomMarkerModal({
   const [isGuardia24h, setIsGuardia24h] = useState(resourceToEdit ? !!resourceToEdit.isGuardia24h : false);
   const [phone, setPhone] = useState(resourceToEdit ? resourceToEdit.phone || '' : '');
   const [email, setEmail] = useState(resourceToEdit ? resourceToEdit.email || '' : '');
+  const [lat, setLat] = useState<number>(resourceToEdit ? resourceToEdit.lat : (coords?.lat || 0));
+  const [lng, setLng] = useState<number>(resourceToEdit ? resourceToEdit.lng : (coords?.lng || 0));
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -52,8 +56,8 @@ export default function AddCustomMarkerModal({
       subcategory,
       category,
       address,
-      lat: resourceToEdit ? resourceToEdit.lat : (coords?.lat || 0),
-      lng: resourceToEdit ? resourceToEdit.lng : (coords?.lng || 0),
+      lat,
+      lng,
       description,
       targetAge,
       isPublic,
@@ -237,6 +241,34 @@ export default function AddCustomMarkerModal({
                 />
                 <span className="font-semibold text-slate-700">Ofrece Guardia Activa de Emergencia 24h</span>
               </label>
+            </div>
+          </div>
+
+          {/* Georeferencing Coordinates */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-50 pt-3">
+            <div>
+              <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Latitud (Coordenada)</label>
+              <input
+                type="number"
+                step="any"
+                disabled={!isAdmin}
+                className="w-full text-xs p-2.5 bg-slate-50 border border-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-600 rounded-xl transition disabled:opacity-60"
+                placeholder="Latitud decmial (ej: -34.9213)"
+                value={lat}
+                onChange={(e) => setLat(parseFloat(e.target.value) || 0)}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Longitud (Coordenada)</label>
+              <input
+                type="number"
+                step="any"
+                disabled={!isAdmin}
+                className="w-full text-xs p-2.5 bg-slate-50 border border-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-600 rounded-xl transition disabled:opacity-60"
+                placeholder="Longitud decimal (ej: -57.9544)"
+                value={lng}
+                onChange={(e) => setLng(parseFloat(e.target.value) || 0)}
+              />
             </div>
           </div>
 

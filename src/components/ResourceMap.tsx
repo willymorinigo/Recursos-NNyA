@@ -4,6 +4,8 @@ import { Resource, ResourceCategory } from '../types';
 import { Plus, X, MapPin } from 'lucide-react';
 
 interface ResourceMapProps {
+  isAdmin?: boolean;
+  onUpdateCoordinates?: (resource: any, lat: number, lng: number) => void;
   resources: Resource[];
   selectedResource: Resource | null;
   onSelectResource: (resource: Resource | null) => void;
@@ -73,6 +75,8 @@ export const CATEGORY_COLORS: Record<ResourceCategory, { bg: string; border: str
 };
 
 export default function ResourceMap({
+  isAdmin = false,
+  onUpdateCoordinates,
   resources,
   selectedResource,
   onSelectResource,
@@ -231,13 +235,18 @@ export default function ResourceMap({
         html: `
           <div class="relative group flex items-center justify-center cursor-pointer transition-transform duration-200 hover:scale-110 active:scale-95" id="marker-${resource.id}">
             <!-- Glow backdrop -->
-            <div class="absolute -inset-1.5 bg-[${config.bg}] opacity-25 blur-[4px] rounded-full group-hover:opacity-45 transition duration-300"></div>
+            <div class="absolute -inset-1.5 bg-[${config.bg}] opacity-15 blur-[4px] rounded-full group-hover:opacity-35 transition duration-300"></div>
             <!-- Pin Body -->
-            <div class="relative w-9 h-9 rounded-full text-white flex items-center justify-center border-2 border-white shadow-md font-semibold transition" style="background-color: ${config.bg}; flex-shrink: 0;">
-              <span class="text-base select-none leading-none">${config.icon}</span>
+            <div class="relative w-9 h-9 rounded-full flex items-center justify-center border-2 shadow-md font-semibold transition overflow-hidden bg-white" style="border-color: ${config.bg}; flex-shrink: 0;">
+              <!-- Overlay layer: 40% category color on top of solid white -->
+              <div class="absolute inset-0 z-0 opacity-40" style="background-color: ${config.bg};"></div>
+              <span class="text-base select-none leading-none z-10">${config.icon}</span>
             </div>
             <!-- Arrow pointer -->
-            <div class="absolute -bottom-0.5 w-1.5 h-1.5 rotate-45 border-r border-b border-white z-0" style="background-color: ${config.bg};"></div>
+            <div class="absolute -bottom-0.5 w-1.5 h-1.5 rotate-45 border-r border-b z-0 bg-white overflow-hidden" style="border-color: ${config.bg};">
+              <!-- Overlay layer: 40% category color on top of solid white -->
+              <div class="absolute inset-0 opacity-40" style="background-color: ${config.bg};"></div>
+            </div>
           </div>
         `,
         iconSize: [36, 36],
@@ -245,7 +254,22 @@ export default function ResourceMap({
         popupAnchor: [0, -32]
       });
 
-      const marker = L.marker([resource.lat, resource.lng], { icon: customIcon });
+      const marker = L.marker([resource.lat, resource.lng], { 
+        icon: customIcon,
+        draggable: !!isAdmin
+      });
+
+      if (isAdmin && onUpdateCoordinates) {
+        marker.on('dragend', (event: any) => {
+          const newLatLng = event.target.getLatLng();
+          const confirmText = `¿Estás seguro de que deseas reubicar el marcador de "${resource.name}" a esta nueva posición?\n\nCoordenadas Nuevas:\nLatitud: ${newLatLng.lat.toFixed(6)}\nLongitud: ${newLatLng.lng.toFixed(6)}`;
+          if (window.confirm(confirmText)) {
+            onUpdateCoordinates(resource, newLatLng.lat, newLatLng.lng);
+          } else {
+            event.target.setLatLng([resource.lat, resource.lng]);
+          }
+        });
+      }
 
       // Create a small elegant popup layout
       const popupContent = document.createElement('div');
@@ -323,6 +347,20 @@ export default function ResourceMap({
 
   return (
     <div className="relative w-full h-full flex flex-col rounded-2xl overflow-hidden shadow-lg border border-slate-100">
+      {/* Admin Georeferencing Instruction */}
+      {isAdmin && !isAddingCustom && (
+        <div className="absolute top-4 left-4 right-12 z-[1000] bg-indigo-50/95 backdrop-blur-md text-slate-800 border-2 border-indigo-200 shadow-xl px-4 py-3 rounded-2xl flex items-center gap-3 pointer-events-auto animate-fade-in">
+          <span className="flex h-3 w-3 relative shrink-0">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-indigo-600"></span>
+          </span>
+          <div className="text-xs">
+            <span className="font-extrabold text-indigo-950 block">Modo Administrador Activo</span>
+            <span className="text-slate-600 font-bold">¡Georreferenciación interactiva!</span> Puedes arrastrar cualquier marcador en el mapa para corregir su ubicación automáticamente.
+          </div>
+        </div>
+      )}
+
       {/* Map Banner Header / Floating Instruction */}
       {isAddingCustom && (
         <div className="absolute top-4 left-4 right-12 z-[1000] bg-amber-50/95 backdrop-blur-md text-amber-900 border-2 border-amber-200 shadow-xl px-4.5 py-3.5 rounded-2xl flex items-center justify-between pointer-events-auto animate-fade-in">
