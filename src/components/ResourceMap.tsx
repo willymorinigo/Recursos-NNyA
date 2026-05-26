@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import { Resource, ResourceCategory } from '../types';
 import { Plus, X, MapPin } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface ResourceMapProps {
   isAdmin?: boolean;
@@ -89,6 +90,14 @@ export default function ResourceMap({
   const markersLayerRef = useRef<L.FeatureGroup | null>(null);
   const tempMarkerLayerRef = useRef<L.Marker | null>(null);
   const [isMapReady, setIsMapReady] = useState(false);
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  // Clear toast automatically
+  useEffect(() => {
+    if (!toastMsg) return;
+    const timer = setTimeout(() => setToastMsg(null), 4000);
+    return () => clearTimeout(timer);
+  }, [toastMsg]);
 
   // Initialize Map
   useEffect(() => {
@@ -262,12 +271,8 @@ export default function ResourceMap({
       if (isAdmin && onUpdateCoordinates) {
         marker.on('dragend', (event: any) => {
           const newLatLng = event.target.getLatLng();
-          const confirmText = `¿Estás seguro de que deseas reubicar el marcador de "${resource.name}" a esta nueva posición?\n\nCoordenadas Nuevas:\nLatitud: ${newLatLng.lat.toFixed(6)}\nLongitud: ${newLatLng.lng.toFixed(6)}`;
-          if (window.confirm(confirmText)) {
-            onUpdateCoordinates(resource, newLatLng.lat, newLatLng.lng);
-          } else {
-            event.target.setLatLng([resource.lat, resource.lng]);
-          }
+          onUpdateCoordinates(resource, newLatLng.lat, newLatLng.lng);
+          setToastMsg(`Ubicación de "${resource.name}" actualizada con éxito`);
         });
       }
 
@@ -384,6 +389,21 @@ export default function ResourceMap({
 
       {/* Actual Map Container */}
       <div id="resource-leaflet-map" ref={mapContainerRef} className="w-full h-full min-h-[400px] md:min-h-0 md:flex-1" />
+
+      {/* Toast Feedback Notification */}
+      <AnimatePresence>
+        {toastMsg && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 15 }}
+            className="absolute bottom-16 left-4 z-[1000] bg-slate-900 border border-slate-800 backdrop-blur-md text-emerald-400 font-sans text-xs font-black shadow-xl px-4 py-3 rounded-2xl flex items-center gap-2 pointer-events-none select-none"
+          >
+            <span className="text-sm">✔️</span>
+            <span>{toastMsg}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Base overlay statistics inside the map corner for nice aesthetics */}
       <div className="absolute bottom-4 left-4 z-[1000] bg-white/95 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-100/80 shadow-md flex items-center gap-2.5 text-xs pointer-events-none select-none">

@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>MAPA RECURSOS Programa de acompañamiento a jóvenes no punibles en conflicto con la ley penal, La Plata - CON CONTACTOS</name>
+    <description>Mapa de recursos del Programa de Acompañamiento a Jóvenes no punibles en conflicto con la ley penal en La Plata. Una herramienta para identificar y articular instituciones, organizaciones y espacios comunitarios que brindan apoyo, contención y oportunidades de inclusión social.</description>
+    <Style id="icon-ci-1-labelson">
+      <IconStyle>
+        <scale>1.1</scale>
+        <Icon>
+          <href>images/icon-1.png</href>
+        </Icon>
+      </IconStyle>
+    </Style>
+    <Style id="icon-ci-2-labelson">
+      <IconStyle>
+        <scale>1.1</scale>
+        <Icon>
+          <href>images/icon-2.png</href>
+        </Icon>
+      </IconStyle>
+    </Style>
+    <Style id="icon-ci-3-labelson">
+      <IconStyle>
+        <scale>1.1</scale>
+        <Icon>
+          <href>images/icon-3.png</href>
+        </Icon>
+      </IconStyle>
+    </Style>
+    <Style id="icon-ci-4-labelson">
+      <IconStyle>
+        <scale>1.1</scale>
+        <Icon>
+          <href>images/icon-4.png</href>
+        </Icon>
+      </IconStyle>
+    </Style>
+    <Style id="icon-ci-5-labelson">
+      <IconStyle>
+        <scale>1.1</scale>
+        <Icon>
+          <href>images/icon-5.png</href>
+        </Icon>
+      </IconStyle>
+    </Style>
+    <Style id="icon-ci-6-labelson">
+      <IconStyle>
+        <scale>1.1</scale>
+        <Icon>
+          <href>images/icon-6.png</href>
+        </Icon>
+      </IconStyle>
+    </Style>
+    <Style id="icon-ci-7-labelson-nodesc">
+      <IconStyle>
+        <scale>1.1</scale>
+        <Icon>
+          <href>images/icon-7.png</href>
+        </Icon>
+      </IconStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="poly-000000-1200-77-nodesc-normal">
+      <LineStyle>
+        <color>ff000000</color>
+        <width>1.2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4d000000</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="poly-000000-1200-77-nodesc-highlight">
+      <LineStyle>
+        <color>ff000000</color>
+        <width>1.8</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4d000000</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <StyleMap id="poly-000000-1200-77-nodesc">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#poly-000000-1200-77-nodesc-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#poly-000000-1200-77-nodesc-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="poly-0288D1-1200-77-nodesc-normal">
+      <LineStyle>
+        <color>ffd18802</color>
+        <width>1.2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4dd18802</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="poly-0288D1-1200-77-nodesc-highlight">
+      <LineStyle>
+        <color>ffd18802</color>
+        <width>1.8</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4dd18802</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <StyleMap id="poly-0288D1-1200-77-nodesc">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#poly-0288D1-1200-77-nodesc-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#poly-0288D1-1200-77-nodesc-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="poly-0F9D58-1200-77-nodesc-normal">
+      <LineStyle>
+        <color>ff589d0f</color>
+        <width>1.2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4d589d0f</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="poly-0F9D58-1200-77-nodesc-highlight">
+      <LineStyle>
+        <color>ff589d0f</color>
+        <width>1.8</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4d589d0f</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <StyleMap id="poly-0F9D58-1200-77-nodesc">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#poly-0F9D58-1200-77-nodesc-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#poly-0F9D58-1200-77-nodesc-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="poly-FF5252-1200-77-nodesc-normal">
+      <LineStyle>
+        <color>ff5252ff</color>
+        <width>1.2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4d5252ff</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="poly-FF5252-1200-77-nodesc-highlight">
+      <LineStyle>
+        <color>ff5252ff</color>
+        <width>1.8</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4d5252ff</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <StyleMap id="poly-FF5252-1200-77-nodesc">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#poly-FF5252-1200-77-nodesc-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#poly-FF5252-1200-77-nodesc-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="poly-FFEA00-1200-77-nodesc-normal">
+      <LineStyle>
+        <color>ff00eaff</color>
+        <width>1.2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4d00eaff</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="poly-FFEA00-1200-77-nodesc-highlight">
+      <LineStyle>
+        <color>ff00eaff</color>
+        <width>1.8</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4d00eaff</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <StyleMap id="poly-FFEA00-1200-77-nodesc">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#poly-FFEA00-1200-77-nodesc-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#poly-FFEA00-1200-77-nodesc-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Folder>
+      <name>CASCO</name>
+      <Placemark>
+        <name>CASCO</name>
+        <address>CALLE 8 e/ 56 y 57 (PISO 2), La Plata, Buenos Aires</address>
+        <description><![CDATA[DIMENSIONES: JUSTICIA JUVENIL Y FAMILIA<br>RECURSO: Juzgados de Garantías del Joven<br>NOMBRE DEL RECURSO/PROGRAMA: JUZGADO DE GARANTIAS DEL JOVEN N° 1 LA PLATA. A CARGO DE MARIA JOSÉ LESCANO<br>DESCRIPCIÓN DEL RECURSO: Juzgado que interviene en la etapa inicial del proceso penal (investigación penal preparatoria-IPP-), velando porque el proceso se realice según las garantias penales correspondientes. Por lo tanto, es quien controla la legalidad de las acciones llevadas a cabo durante la IPP, debiendo ser quien autorice medidas de prueba (como allanamientos) o medidas de coerción (como la prisión preventiva)<br>DIRECCIÓN: CALLE 8 e/ 56 y 57 (PISO 2), La Plata, Buenos Aires<br>LOCALIDAD: La Plata (centro)<br>CONTACTO: 2214102400 (Int.52465) / juzgarjov1-lp@jusbuenosaires.gov.ar<br>unnamed (1): ]]></description>
+        <styleUrl>#icon-ci-1-labelson</styleUrl>
+        <ExtendedData>
+          <Data name="DIMENSIONES">
+            <value>JUSTICIA JUVENIL Y FAMILIA</value>
+          </Data>
+          <Data name="RECURSO">
+            <value>Juzgados de Garantías del Joven</value>
+          </Data>
+          <Data name="NOMBRE DEL RECURSO/PROGRAMA">
+            <value>JUZGADO DE GARANTIAS DEL JOVEN N° 1 LA PLATA. A CARGO DE MARIA JOSÉ LESCANO</value>
+          </Data>
+          <Data name="DESCRIPCIÓN DEL RECURSO">
+            <value>Juzgado que interviene en la etapa inicial del proceso penal (investigación penal preparatoria-IPP-), velando porque el proceso se realice según las garantias penales correspondientes. Por lo tanto, es quien controla la legalidad de las acciones llevadas a cabo durante la IPP, debiendo ser quien autorice medidas de prueba (como allanamientos) o medidas de coerción (como la prisión preventiva)</value>
+          </Data>
+          <Data name="DIRECCIÓN">
+            <value>CALLE 8 e/ 56 y 57 (PISO 2), La Plata, Buenos Aires</value>
+          </Data>
+          <Data name="LOCALIDAD">
+            <value>La Plata (centro)</value>
+          </Data>
+          <Data name="CONTACTO">
+            <value>2214102400 (Int.52465) / juzgarjov1-lp@jusbuenosaires.gov.ar</value>
+          </Data>
+          <Data name="unnamed (1)">
+            <value/>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>CASCO</name>
+        <address>CALLE 8 e/ 56 y 57 PISO 2, La Plata, Buenos Aires</address>
+        <description><![CDATA[DIMENSIONES: JUSTICIA JUVENIL Y FAMILIA<br>RECURSO: Juzgados de Garantías del Joven<br>NOMBRE DEL RECURSO/PROGRAMA: JUZGADO DE GARANTIAS DEL JOVEN N° 2 LA PLATA A CARGO DE GUILLERMO MARCENARO (JUEZ DE ADULTOS QUE SUBROGA POR JUZGADO VACANTE)<br>DESCRIPCIÓN DEL RECURSO: Juzgado que interviene en la etapa inicial del proceso penal (investigación penal preparatoria-IPP-), velando porque el proceso se realice según las garantias penales correspondientes. Por lo tanto, es quien controla la legalidad de las acciones llevadas a cabo durante la IPP, debiendo ser quien autorice medidas de prueba (como allanamientos) o medidas de coerción (como la prisión preventiva)<br>DIRECCIÓN: CALLE 8 e/ 56 y 57 PISO 2, La Plata, Buenos Aires<br>LOCALIDAD: La Plata (centro)<br>CONTACTO: 2214102419 (Int.52680) / juzgarjov2-lp@jusbuenosaires.gov.ar<br>unnamed (1): ]]></description>
+        <styleUrl>#icon-ci-1-labelson</styleUrl>
+        <ExtendedData>
+          <Data name="DIMENSIONES">
+            <value>JUSTICIA JUVENIL Y FAMILIA</value>
+          </Data>
+          <Data name="RECURSO">
+            <value>Juzgados de Garantías del Joven</value>
+          </Data>
+          <Data name="NOMBRE DEL RECURSO/PROGRAMA">
+            <value>JUZGADO DE GARANTIAS DEL JOVEN N° 2 LA PLATA A CARGO DE GUILLERMO MARCENARO (JUEZ DE ADULTOS QUE SUBROGA POR JUZGADO VACANTE)</value>
+          </Data>
+          <Data name="DESCRIPCIÓN DEL RECURSO">
+            <value>Juzgado que interviene en la etapa inicial del proceso penal (investigación penal preparatoria-IPP-), velando porque el proceso se realice según las garantias penales correspondientes. Por lo tanto, es quien controla la legalidad de las acciones llevadas a cabo durante la IPP, debiendo ser quien autorice medidas de prueba (como allanamientos) o medidas de coerción (como la prisión preventiva)</value>
+          </Data>
+          <Data name="DIRECCIÓN">
+            <value>CALLE 8 e/ 56 y 57 PISO 2, La Plata, Buenos Aires</value>
+          </Data>
+          <Data name="LOCALIDAD">
+            <value>La Plata (centro)</value>
+          </Data>
+          <Data name="CONTACTO">
+            <value>2214102419 (Int.52680) / juzgarjov2-lp@jusbuenosaires.gov.ar</value>
+          </Data>
+          <Data name="unnamed (1)">
+            <value/>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>CASCO</name>
+        <address>CALLE 8 e/ 56 y 57 (PISO 2), La Plata, Buenos Aires</address>
+        <description><![CDATA[DIMENSIONES: JUSTICIA JUVENIL Y FAMILIA<br>RECURSO: Juzgados de Garantías del Joven<br>NOMBRE DEL RECURSO/PROGRAMA: JUZGADO DE GARANTIAS DEL JOVEN N° 3 LA PLATA, A CARGO DE LORENA VUOTTO<br>DESCRIPCIÓN DEL RECURSO: Juzgado que interviene en la etapa inicial del proceso penal (investigación penal preparatoria-IPP-), velando porque el proceso se realice según las garantias penales correspondientes. Por lo tanto, es quien controla la legalidad de las acciones llevadas a cabo durante la IPP, debiendo ser quien autorice medidas de prueba (como allanamientos) o medidas de coerción (como la prisión preventiva)<br>DIRECCIÓN: CALLE 8 e/ 56 y 57 (PISO 2), La Plata, Buenos Aires<br>LOCALIDAD: La Plata (centro)<br>CONTACTO: 2214102400 (Int.52470) / juzgarjov3-lp@jusbuenosaires.gov.ar<br>unnamed (1): ]]></description>
+        <styleUrl>#icon-ci-1-labelson</styleUrl>
+        <ExtendedData>
+          <Data name="DIMENSIONES">
+            <value>JUSTICIA JUVENIL Y FAMILIA</value>
+          </Data>
+          <Data name="RECURSO">
+            <value>Juzgados de Garantías del Joven</value>
+          </Data>
+          <Data name="NOMBRE DEL RECURSO/PROGRAMA">
+            <value>JUZGADO DE GARANTIAS DEL JOVEN N° 3 LA PLATA, A CARGO DE LORENA VUOTTO</value>
+          </Data>
+          <Data name="DESCRIPCIÓN DEL RECURSO">
+            <value>Juzgado que interviene en la etapa inicial del proceso penal (investigación penal preparatoria-IPP-), velando porque el proceso se realice según las garantias penales correspondientes. Por lo tanto, es quien controla la legalidad de las acciones llevadas a cabo durante la IPP, debiendo ser quien autorice medidas de prueba (como allanamientos) o medidas de coerción (como la prisión preventiva)</value>
+          </Data>
+          <Data name="DIRECCIÓN">
+            <value>CALLE 8 e/ 56 y 57 (PISO 2), La Plata, Buenos Aires</value>
+          </Data>
+          <Data name="LOCALIDAD">
+            <value>La Plata (centro)</value>
+          </Data>
+          <Data name="CONTACTO">
+            <value>2214102400 (Int.52470) / juzgarjov3-lp@jusbuenosaires.gov.ar</value>
+          </Data>
+          <Data name="unnamed (1)">
+            <value/>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>CASCO</name>
+        <address>CALLE 7 N° 758, La Plata, Buenos Aires</address>
+        <description><![CDATA[DIMENSIONES: JUSTICIA JUVENIL Y FAMILIA<br>RECURSO: Juzgados de Responsabilidad Penal Juvenil<br>NOMBRE DEL RECURSO/PROGRAMA: JUZGADO DE RESPONSABILIDAD PENAL JUVENIL N° 1, A CARGO DE MARCELO MARTIN GIORGIS<br>DESCRIPCIÓN DEL RECURSO: Juzgado que interviene en la etapa de juicio y se encarga de determinar la existencia -o no- de responsabilidad penal, establecer la pena y luego monitorear la ejecución de la medida dispuesta<br>DIRECCIÓN: CALLE 7 N° 758, La Plata, Buenos Aires<br>LOCALIDAD: La Plata (centro)<br>CONTACTO: 2214891219 / 2214890715 / juzresponjuv1-lp@jusbuenosaires.gov.ar<br><br>unnamed (1): ]]></description>
+        <styleUrl>#icon-ci-1-labelson</styleUrl>
+        <ExtendedData>
+          <Data name="DIMENSIONES">
+            <value>JUSTICIA JUVENIL Y FAMILIA</value>
+          </Data>
+          <Data name="RECURSO">
+            <value>Juzgados de Responsabilidad Penal Juvenil</value>
+          </Data>
+          <Data name="NOMBRE DEL RECURSO/PROGRAMA">
+            <value>JUZGADO DE RESPONSABILIDAD PENAL JUVENIL N° 1, A CARGO DE MARCELO MARTIN GIORGIS</value>
+          </Data>
+          <Data name="DESCRIPCIÓN DEL RECURSO">
+            <value>Juzgado que interviene en la etapa de juicio y se encarga de determinar la existencia -o no- de responsabilidad penal, establecer la pena y luego monitorear la ejecución de la medida dispuesta</value>
+          </Data>
+          <Data name="DIRECCIÓN">
+            <value>CALLE 7 N° 758, La Plata, Buenos Aires</value>
+          </Data>
+          <Data name="LOCALIDAD">
+            <value>La Plata (centro)</value>
+          </Data>
+          <Data name="CONTACTO">
+            <value>2214891219 / 2214890715 / juzresponjuv1-lp@jusbuenosaires.gov.ar</value>
+          </Data>
+          <Data name="unnamed (1)">
+            <value/>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>CASCO</name>
+        <address>CALLE 7 N° 758, La Plata, Buenos Aires</address>
+        <description><![CDATA[DIMENSIONES: JUSTICIA JUVENIL Y FAMILIA<br>RECURSO: Juzgados de Responsabilidad Penal Juvenil<br>NOMBRE DEL RECURSO/PROGRAMA: JUZGADO DE RESPONSABILIDAD PENAL JUVENIL N° 2, A CARGO DE JUAN CARLOS ESTRADA<br>DESCRIPCIÓN DEL RECURSO: Juzgado que interviene en la etapa de juicio y se encarga de determinar la existencia -o no- de responsabilidad penal, establecer la pena y luego monitorear la ejecución de la medida dispuesta<br>DIRECCIÓN: CALLE 7 N° 758, La Plata, Buenos Aires<br>LOCALIDAD: La Plata (centro)<br>CONTACTO: 2214213165 (Int. 56140) juzresponjuv2-lp@jusbuenosaires.gov.ar<br><br>unnamed (1): ]]></description>
+        <styleUrl>#icon-ci-1-labelson</styleUrl>
+        <ExtendedData>
+          <Data name="DIMENSIONES">
+            <value>JUSTICIA JUVENIL Y FAMILIA</value>
+          </Data>
+          <Data name="RECURSO">
+            <value>Juzgados de Responsabilidad Penal Juvenil</value>
+          </Data>
+          <Data name="NOMBRE DEL RECURSO/PROGRAMA">
+            <value>JUZGADO DE RESPONSABILIDAD PENAL JUVENIL N° 2, A CARGO DE JUAN CARLOS ESTRADA</value>
+          </Data>
+          <Data name="DESCRIPCIÓN DEL RECURSO">
+            <value>Juzgado que interviene en la etapa de juicio y se encarga de determinar la existencia -o no- de responsabilidad penal, establecer la pena y luego monitorear la ejecución de la medida dispuesta</value>
+          </Data>
+          <Data name="DIRECCIÓN">
+            <value>CALLE 7 N° 758, La Plata, Buenos Aires</value>
+          </Data>
+          <Data name="LOCALIDAD">
+            <value>La Plata (centro)</value>
+          </Data>
+          <Data name="CONTACTO">
+            <value>2214213165 (Int. 56140) juzresponjuv2-lp@jusbuenosaires.gov.ar</value>
+          </Data>
+          <Data name="unnamed (1)">
+            <value/>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>CASCO</name>
+        <address>CALLE 55 N° 726, La Plata, Buenos Aires</address>
+        <description><![CDATA[DIMENSIONES: JUSTICIA JUVENIL Y FAMILIA<br>RECURSO: Fiscalías de Responsabilidad Penal Juvenil<br>NOMBRE DEL RECURSO/PROGRAMA: UNIDAD FUNCIONAL DE INSTRUCCIÓN Y JUICIO (FISCALIA) N° 1, FUERO RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, ÁREA INSTRUCCIÓN A CARGO DE MAGDALENA LUZ PARRILLO<br>DESCRIPCIÓN DEL RECURSO: Promueve la acción penal y dirige la investigación sin dejar de velar por la legalidad del proceso. Por la distribución interna de La Plata, interviene hasta elevar a juicio<br>DIRECCIÓN: CALLE 55 N° 726, La Plata, Buenos Aires<br>LOCALIDAD: La Plata (centro)<br>CONTACTO: 2215096766 / 2215096767/2215096768 ufijoven1.lp@mpba.gov.ar<br><br>unnamed (1): ]]></description>
+        <styleUrl>#icon-ci-1-labelson</styleUrl>
+        <ExtendedData>
+          <Data name="DIMENSIONES">
+            <value>JUSTICIA JUVENIL Y FAMILIA</value>
+          </Data>
+          <Data name="RECURSO">
+            <value>Fiscalías de Responsabilidad Penal Juvenil</value>
+          </Data>
+          <Data name="NOMBRE DEL RECURSO/PROGRAMA">
+            <value>UNIDAD FUNCIONAL DE INSTRUCCIÓN Y JUICIO (FISCALIA) N° 1, FUERO RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, ÁREA INSTRUCCIÓN A CARGO DE MAGDALENA LUZ PARRILLO</value>
+          </Data>
+          <Data name="DESCRIPCIÓN DEL RECURSO">
+            <value>Promueve la acción penal y dirige la investigación sin dejar de velar por la legalidad del proceso. Por la distribución interna de La Plata, interviene hasta elevar a juicio</value>
+          </Data>
+          <Data name="DIRECCIÓN">
+            <value>CALLE 55 N° 726, La Plata, Buenos Aires</value>
+          </Data>
+          <Data name="LOCALIDAD">
+            <value>La Plata (centro)</value>
+          </Data>
+          <Data name="CONTACTO">
+            <value>2215096766 / 2215096767/2215096768 ufijoven1.lp@mpba.gov.ar</value>
+          </Data>
+          <Data name="unnamed (1)">
+            <value/>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>CASCO</name>
+        <address>CALLE 55 N° 726, La Plata, Buenos Aires</address>
+        <description><![CDATA[DIMENSIONES: JUSTICIA JUVENIL Y FAMILIA<br>RECURSO: Fiscalías de Responsabilidad Penal Juvenil<br>NOMBRE DEL RECURSO/PROGRAMA: UNIDAD FUNCIONAL DE INSTRUCCIÓN Y JUICIO (FISCALIA) N° 2, FUERO RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, ÁREA INSTRUCCIÓN A CARGO DE SABRINA CLADERA<br>DESCRIPCIÓN DEL RECURSO: Promueve la acción penal y dirige la investigación sin dejar de velar por la legalidad del proceso. Por la distribución interna de La Plata, interviene hasta elevar a juicio<br>DIRECCIÓN: CALLE 55 N° 726, La Plata, Buenos Aires<br>LOCALIDAD: La Plata (centro)<br>CONTACTO: 2215096773/ 2215096772 / 2215096771 ufijmenores2.lp@mpba.gov.ar<br><br>unnamed (1): ]]></description>
+        <styleUrl>#icon-ci-1-labelson</styleUrl>
+        <ExtendedData>
+          <Data name="DIMENSIONES">
+            <value>JUSTICIA JUVENIL Y FAMILIA</value>
+          </Data>
+          <Data name="RECURSO">
+            <value>Fiscalías de Responsabilidad Penal Juvenil</value>
+          </Data>
+          <Data name="NOMBRE DEL RECURSO/PROGRAMA">
+            <value>UNIDAD FUNCIONAL DE INSTRUCCIÓN Y JUICIO (FISCALIA) N° 2, FUERO RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, ÁREA INSTRUCCIÓN A CARGO DE SABRINA CLADERA</value>
+          </Data>
+          <Data name="DESCRIPCIÓN DEL RECURSO">
+            <value>Promueve la acción penal y dirige la investigación sin dejar de velar por la legalidad del proceso. Por la distribución interna de La Plata, interviene hasta elevar a juicio</value>
+          </Data>
+          <Data name="DIRECCIÓN">
+            <value>CALLE 55 N° 726, La Plata, Buenos Aires</value>
+          </Data>
+          <Data name="LOCALIDAD">
+            <value>La Plata (centro)</value>
+          </Data>
+          <Data name="CONTACTO">
+            <value>2215096773/ 2215096772 / 2215096771 ufijmenores2.lp@mpba.gov.ar</value>
+          </Data>
+          <Data name="unnamed (1)">
+            <value/>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>CASCO</name>
+        <address>CALLE 55 N° 726, La Plata, Buenos Aires</address>
+        <description><![CDATA[DIMENSIONES: JUSTICIA JUVENIL Y FAMILIA<br>RECURSO: Fiscalías de Responsabilidad Penal Juvenil<br>NOMBRE DEL RECURSO/PROGRAMA: UNIDAD FUNCIONAL DE INSTRUCCIÓN Y JUICIO (FISCALIA) N° 2, FUERO RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, ÁREA JUICIO A CARGO DE SILVINA PEREZ<br>DESCRIPCIÓN DEL RECURSO: Por la distribución de La Plata, interviene en la etapa de juicio. Solicita la respuesta penal e interviene durante la ejecución de la eventual pena<br>DIRECCIÓN: CALLE 55 N° 726, La Plata, Buenos Aires<br>LOCALIDAD: La Plata (centro)<br>CONTACTO: 2215096773/ 2215096772 / 2215096771 ufijmenores2.lp@mpba.gov.ar<br><br>unnamed (1): ]]></description>
+        <styleUrl>#icon-ci-1-labelson</styleUrl>
+        <ExtendedData>
+          <Data name="DIMENSIONES">
+            <value>JUSTICIA JUVENIL Y FAMILIA</value>
+          </Data>
+          <Data name="RECURSO">
+            <value>Fiscalías de Responsabilidad Penal Juvenil</value>
+          </Data>
+          <Data name="NOMBRE DEL RECURSO/PROGRAMA">
+            <value>UNIDAD FUNCIONAL DE INSTRUCCIÓN Y JUICIO (FISCALIA) N° 2, FUERO RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, ÁREA JUICIO A CARGO DE SILVINA PEREZ</value>
+          </Data>
+          <Data name="DESCRIPCIÓN DEL RECURSO">
+            <value>Por la distribución de La Plata, interviene en la etapa de juicio. Solicita la respuesta penal e interviene durante la ejecución de la eventual pena</value>
+          </Data>
+          <Data name="DIRECCIÓN">
+            <value>CALLE 55 N° 726, La Plata, Buenos Aires</value>
+          </Data>
+          <Data name="LOCALIDAD">
+            <value>La Plata (centro)</value>
+          </Data>
+          <Data name="CONTACTO">
+            <value>2215096773/ 2215096772 / 2215096771 ufijmenores2.lp@mpba.gov.ar</value>
+          </Data>
+          <Data name="unnamed (1)">
+            <value/>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>CASCO</name>
+        <address>CALLE 55 N° 726, La Plata, Buenos Aires</address>
+        <description><![CDATA[DIMENSIONES: JUSTICIA JUVENIL Y FAMILIA<br>RECURSO: Fiscalías de Responsabilidad Penal Juvenil<br>NOMBRE DEL RECURSO/PROGRAMA: UNIDAD FUNCIONAL DE INSTRUCCIÓN Y JUICIO (FISCALIA) N° 1, FUERO RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, ÁREA JUICIO A CARGO DE MERCEDES CATANI<br>DESCRIPCIÓN DEL RECURSO: Por la distribución de La Plata, interviene en la etapa de juicio. Solicita la respuesta penal e interviene durante la ejecución de la eventual pena<br>DIRECCIÓN: CALLE 55 N° 726, La Plata, Buenos Aires<br>LOCALIDAD: La Plata (centro)<br>CONTACTO: 2215096757/ 2215096756/ 2215096758 ufijmenores2y4.lp@mpba.gov.ar<br><br>unnamed (1): ]]></description>
+        <styleUrl>#icon-ci-1-labelson</styleUrl>
+        <ExtendedData>
+          <Data name="DIMENSIONES">
+            <value>JUSTICIA JUVENIL Y FAMILIA</value>
+          </Data>
+          <Data name="RECURSO">
+            <value>Fiscalías de Responsabilidad Penal Juvenil</value>
+          </Data>
+          <Data name="NOMBRE DEL RECURSO/PROGRAMA">
+            <value>UNIDAD FUNCIONAL DE INSTRUCCIÓN Y JUICIO (FISCALIA) N° 1, FUERO RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, ÁREA JUICIO A CARGO DE MERCEDES CATANI</value>
+          </Data>
+          <Data name="DESCRIPCIÓN DEL RECURSO">
+            <value>Por la distribución de La Plata, interviene en la etapa de juicio. Solicita la respuesta penal e interviene durante la ejecución de la eventual pena</value>
+          </Data>
+          <Data name="DIRECCIÓN">
+            <value>CALLE 55 N° 726, La Plata, Buenos Aires</value>
+          </Data>
+          <Data name="LOCALIDAD">
+            <value>La Plata (centro)</value>
+          </Data>
+          <Data name="CONTACTO">
+            <value>2215096757/ 2215096756/ 2215096758 ufijmenores2y4.lp@mpba.gov.ar</value>
+          </Data>
+          <Data name="unnamed (1)">
+            <value/>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>CASCO</name>
+        <address>CALLE 7 N° 1150, La Plata, Buenos Aires</address>
+        <description><![CDATA[DIMENSIONES: JUSTICIA JUVENIL Y FAMILIA<br>RECURSO: Fiscalías de Responsabilidad Penal Juvenil<br>NOMBRE DEL RECURSO/PROGRAMA: UNIDAD FUNCIONAL DE INSTRUCCIÓN Y JUICIO (FISCALIA) N° 3, FUERO RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, ÁREA INSTRUCCIÓN A CARGO DE CARMEN VIVIANA IBARRA<br>DESCRIPCIÓN DEL RECURSO: Promueve la acción penal y dirige la investigación sin dejar de velar por la legalidad del proceso. Por la distribución interna de La Plata, interviene hasta elevar a juicio<br>DIRECCIÓN: CALLE 7 N° 1150, La Plata, Buenos Aires<br>LOCALIDAD: La Plata (centro)<br>CONTACTO: 2215096761/2215096760/2215096762 ufijmenores3.lp@mpba.gov.ar<br><br>unnamed (1): ]]></description>
+        <styleUrl>#icon-ci-1-labelson</styleUrl>
+        <ExtendedData>
+          <Data name="DIMENSIONES">
+            <value>JUSTICIA JUVENIL Y FAMILIA</value>
+          </Data>
+          <Data name="RECURSO">
+            <value>Fiscalías de Responsabilidad Penal Juvenil</value>
+          </Data>
+          <Data name="NOMBRE DEL RECURSO/PROGRAMA">
+            <value>UNIDAD FUNCIONAL DE INSTRUCCIÓN Y JUICIO (FISCALIA) N° 3, FUERO RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, ÁREA INSTRUCCIÓN A CARGO DE CARMEN VIVIANA IBARRA</value>
+          </Data>
+          <Data name="DESCRIPCIÓN DEL RECURSO">
+            <value>Promueve la acción penal y dirige la investigación sin dejar de velar por la legalidad del proceso. Por la distribución interna de La Plata, interviene hasta elevar a juicio</value>
+          </Data>
+          <Data name="DIRECCIÓN">
+            <value>CALLE 7 N° 1150, La Plata, Buenos Aires</value>
+          </Data>
+          <Data name="LOCALIDAD">
+            <value>La Plata (centro)</value>
+          </Data>
+          <Data name="CONTACTO">
+            <value>2215096761/2215096760/2215096762 ufijmenores3.lp@mpba.gov.ar</value>
+          </Data>
+          <Data name="unnamed (1)">
+            <value/>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>CASCO</name>
+        <address>CALLE 7 N° 1150, La Plata, Buenos Aires</address>
+        <description><![CDATA[DIMENSIONES: JUSTICIA JUVENIL Y FAMILIA<br>RECURSO: Fiscalías de Responsabilidad Penal Juvenil<br>NOMBRE DEL RECURSO/PROGRAMA: UNIDAD FUNCIONAL DE INSTRUCCIÓN Y JUICIO (FISCALIA) N° 4, FUERO RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, ÁREA INSTRUCCIÓN A CARGO DE ANA MARIA RUBIO<br>DESCRIPCIÓN DEL RECURSO: Promueve la acción penal y dirige la investigación sin dejar de velar por la legalidad del proceso. Por la distribución interna de La Plata, interviene hasta elevar a juicio<br>DIRECCIÓN: CALLE 7 N° 1150, La Plata, Buenos Aires<br>LOCALIDAD: La Plata (centro)<br>CONTACTO: 2214165484 / 2214165485 / ufijmenores4.lp@mpba.gov.ar<br><br>unnamed (1): ]]></description>
+        <styleUrl>#icon-ci-1-labelson</styleUrl>
+        <ExtendedData>
+          <Data name="DIMENSIONES">
+            <value>JUSTICIA JUVENIL Y FAMILIA</value>
+          </Data>
+          <Data name="RECURSO">
+            <value>Fiscalías de Responsabilidad Penal Juvenil</value>
+          </Data>
+          <Data name="NOMBRE DEL RECURSO/PROGRAMA">
+            <value>UNIDAD FUNCIONAL DE INSTRUCCIÓN Y JUICIO (FISCALIA) N° 4, FUERO RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, ÁREA INSTRUCCIÓN A CARGO DE ANA MARIA RUBIO</value>
+          </Data>
+          <Data name="DESCRIPCIÓN DEL RECURSO">
+            <value>Promueve la acción penal y dirige la investigación sin dejar de velar por la legalidad del proceso. Por la distribución interna de La Plata, interviene hasta elevar a juicio</value>
+          </Data>
+          <Data name="DIRECCIÓN">
+            <value>CALLE 7 N° 1150, La Plata, Buenos Aires</value>
+          </Data>
+          <Data name="LOCALIDAD">
+            <value>La Plata (centro)</value>
+          </Data>
+          <Data name="CONTACTO">
+            <value>2214165484 / 2214165485 / ufijmenores4.lp@mpba.gov.ar</value>
+          </Data>
+          <Data name="unnamed (1)">
+            <value/>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>CASCO</name>
+        <address>CALLE 54 N° 590, La Plata, Buenos Aires</address>
+        <description><![CDATA[DIMENSIONES: JUSTICIA JUVENIL Y FAMILIA<br>RECURSO: Defensorías de Responsabilidad Penal Juvenil<br>NOMBRE DEL RECURSO/PROGRAMA: UNIDAD FUNCIONAL DE DEFENSA PENAL (DEFENSORÍA) N° 14 DEL FUERO DE RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, A CARGO DE MARIA RAQUEL PONZINIBBIO<br>DESCRIPCIÓN DEL RECURSO: Ejerce la defense técnica del NNoA durante la IPP, la medida de seguridad, el juicio y la eventual ejecución de una pena, según el caso, si es que el NNoA no designa un/a defensor/a particular<br>DIRECCIÓN: CALLE 54 N° 590, La Plata, Buenos Aires<br>LOCALIDAD: La Plata (centro)<br>CONTACTO: 2214165673 / 2214165672 / defmenores14.lp@mpba.gov.ar<br><br>unnamed (1): ]]></description>
+        <styleUrl>#icon-ci-1-labelson</styleUrl>
+        <ExtendedData>
+          <Data name="DIMENSIONES">
+            <value>JUSTICIA JUVENIL Y FAMILIA</value>
+          </Data>
+          <Data name="RECURSO">
+            <value>Defensorías de Responsabilidad Penal Juvenil</value>
+          </Data>
+          <Data name="NOMBRE DEL RECURSO/PROGRAMA">
+            <value>UNIDAD FUNCIONAL DE DEFENSA PENAL (DEFENSORÍA) N° 14 DEL FUERO DE RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, A CARGO DE MARIA RAQUEL PONZINIBBIO</value>
+          </Data>
+          <Data name="DESCRIPCIÓN DEL RECURSO">
+            <value>Ejerce la defensa técnica del NNoA durante la IPP, la medida de suguridad, el juicio y la eventual ejecución de una pena, según el caso, si es que el NNoA no designa un/a defensor/a particular</value>
+          </Data>
+          <Data name="DIRECCIÓN">
+            <value>CALLE 54 N° 590, La Plata, Buenos Aires</value>
+          </Data>
+          <Data name="LOCALIDAD">
+            <value>La Plata (centro)</value>
+          </Data>
+          <Data name="CONTACTO">
+            <value>2214165673 / 2214165672 / defmenores14.lp@mpba.gov.ar</value>
+          </Data>
+          <Data name="unnamed (1)">
+            <value/>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>CASCO</name>
+        <address>CALLE 54 N° 590, La Plata, Buenos Aires</address>
+        <description><![CDATA[DIMENSIONES: JUSTICIA JUVENIL Y FAMILIA<br>RECURSO: Defensorías de Responsabilidad Penal Juvenil<br>NOMBRE DEL RECURSO/PROGRAMA: UNIDAD FUNCIONAL DE DEFENSA PENAL (DEFENSORÍA) N° 15 DEL FUERO DE RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, A CARGO DE RICARDO FABIAN BERENGUER<br>DESCRIPCIÓN DEL RECURSO: Ejerce la defensa técnica del NNoA durante la IPP, la medida de suguridad, el juicio y la eventual ejecución de una pena, según el caso, si es que el NNoA no designa un/a defensor/a particular<br>DIRECCIÓN: CALLE 54 N° 590, La Plata, Buenos Aires<br>LOCALIDAD: La Plata (centro)<br>CONTACTO: 2214165659 defmenores15.lp@mpba.gov.ar<br><br>unnamed (1): ]]></description>
+        <styleUrl>#icon-ci-1-labelson</styleUrl>
+        <ExtendedData>
+          <Data name="DIMENSIONES">
+            <value>JUSTICIA JUVENIL Y FAMILIA</value>
+          </Data>
+          <Data name="RECURSO">
+            <value>Defensorías de Responsabilidad Penal Juvenil</value>
+          </Data>
+          <Data name="NOMBRE DEL RECURSO/PROGRAMA">
+            <value>UNIDAD FUNCIONAL DE DEFENSA PENAL (DEFENSORÍA) N° 15 DEL FUERO DE RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, A CARGO DE RICARDO FABIAN BERENGUER</value>
+          </Data>
+          <Data name="DESCRIPCIÓN DEL RECURSO">
+            <value>Ejerce la defensa técnica del NNoA durante la IPP, la medida de suguridad, el juicio y la eventual ejecución de una pena, según el caso, si es que el NNoA no designa un/a defensor/a particular</value>
+          </Data>
+          <Data name="DIRECCIÓN">
+            <value>CALLE 54 N° 590, La Plata, Buenos Aires</value>
+          </Data>
+          <Data name="LOCALIDAD">
+            <value>La Plata (centro)</value>
+          </Data>
+          <Data name="CONTACTO">
+            <value>2214165659 defmenores15.lp@mpba.gov.ar</value>
+          </Data>
+          <Data name="unnamed (1)">
+            <value/>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>CASCO</name>
+        <address>CALLE 54 N° 590, La Plata, Buenos Aires</address>
+        <description><![CDATA[DIMENSIONES: JUSTICIA JUVENIL Y FAMILIA<br>RECURSO: Defensorías de Responsabilidad Penal Juvenil<br>NOMBRE DEL RECURSO/PROGRAMA: UNIDAD FUNCIONAL DE DEFENSA PENAL (DEFENSORÍA) N° 16 DEL FUERO DE RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, A CARGO DE MARIA LIA DOMECQ<br>DESCRIPCIÓN DEL RECURSO: Ejerce la defensa técnica del NNoA durante la IPP, la medida de suguridad, el juicio y la eventual ejecución de una pena, según el caso, si es que el NNoA no designa un/a defensor/a particular<br>DIRECCIÓN: CALLE 54 N° 590, La Plata, Buenos Aires<br>LOCALIDAD: La Plata (centro)<br>CONTACTO: 2214165678 / 2214165679 / 2214165612 / defmenores16.lp@mpba.gov.ar<br><br>unnamed (1): ]]></description>
+        <styleUrl>#icon-ci-1-labelson</styleUrl>
+        <ExtendedData>
+          <Data name="DIMENSIONES">
+            <value>JUSTICIA JUVENIL Y FAMILIA</value>
+          </Data>
+          <Data name="RECURSO">
+            <value>Defensorías de Responsabilidad Penal Juvenil</value>
+          </Data>
+          <Data name="NOMBRE DEL RECURSO/PROGRAMA">
+            <value>UNIDAD FUNCIONAL DE DEFENSA PENAL (DEFENSORÍA) N° 16 DEL FUERO DE RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, A CARGO DE MARIA LIA DOMECQ</value>
+          </Data>
+          <Data name="DESCRIPCIÓN DEL RECURSO">
+            <value>Ejerce la defensa técnica del NNoA durante la IPP, la medida de suguridad, el juicio y la eventual ejecución de una pena, según el caso, si es que el NNoA no designa un/a defensor/a particular</value>
+          </Data>
+          <Data name="DIRECCIÓN">
+            <value>CALLE 54 N° 590, La Plata, Buenos Aires</value>
+          </Data>
+          <Data name="LOCALIDAD">
+            <value>La Plata (centro)</value>
+          </Data>
+          <Data name="CONTACTO">
+            <value>2214165678 / 2214165679 / 2214165612 / defmenores16.lp@mpba.gov.ar</value>
+          </Data>
+          <Data name="unnamed (1)">
+            <value/>
+          </Data>
+        </ExtendedData>
+      </Placemark>
+      <Placemark>
+        <name>CASCO</name>
+        <address>CALLE 54 N° 590, La Plata, Buenos Aires</address>
+        <description><![CDATA[DIMENSIONES: JUSTICIA JUVENIL Y FAMILIA<br>RECURSO: Defensorías de Responsabilidad Penal Juvenil<br>NOMBRE DEL RECURSO/PROGRAMA: UNIDAD FUNCIONAL DE DEFENSA PENAL (DEFENSORÍA) N° 20 DEL FUERO DE RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, A CARGO DE MARIA ELIA KLAPPENBACH<br>DESCRIPCIÓN DEL RECURSO: Ejerce la defensa técnica del NNoA durante la IPP, la medida de suguridad, el juicio y la eventual ejecución de una pena, según el caso, si es que el NNoA no designa un/a defensor/a particular<br>DIRECCIÓN: CALLE 54 N° 590, La Plata, Buenos Aires<br>LOCALIDAD: La Plata (centro)<br>CONTACTO: 2214165671/2214165726 / defmenores20.lp@mpba.gov.ar<br><br>unnamed (1): ]]></description>
+        <styleUrl>#icon-ci-1-labelson</styleUrl>
+        <ExtendedData>
+          <Data name="DIMENSIONES">
+            <value>JUSTICIA JUVENIL Y FAMILIA</value>
+          </Data>
+          <Data name="RECURSO">
+            <value>Defensorías de Responsabilidad Penal Juvenil</value>
+          </Data>
+          <Data name="NOMBRE DEL RECURSO/PROGRAMA">
+            <value>UNIDAD FUNCIONAL DE DEFENSA PENAL (DEFENSORÍA) N° 20 DEL FUERO DE RESPONSABILIDAD PENAL JUVENIL DE LA PLATA, A CARGO DE MARIA ELIA KLAPPENBACH</value>
+          </Data>
+          <Data name="DESCRIPCIÓN DEL RECURSO">
+            <value>Ejerce la defensa técnica del NNoA durante la IPP, la medida de suguridad, el juicio y la eventual ejecución de una pena, según el caso, si es que el NNoA no designa un/a defensor/a particular</value>
+          </Data>
+          <Data name="DIRECCIÓN">
+            <value>CALLE 54 N° 590, La Plata, Buenos Aires</value>
+          </Data>
+          <Data name="LOCALIDAD">
+            <value>La Plata (centro)</value>
+          </Data>
+          <Data name="CONTACTO">
+            <value>2214165671/2214165726 / defmenores20.lp@mpba.gov.ar</value>
+          </Data>
+          <Data name="unnamed (1)">
+            <value/>
+          </Data>
+        </ExtendedData>
+      </Placemark>
